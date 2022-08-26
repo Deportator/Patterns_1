@@ -1,39 +1,61 @@
 import com.github.javafaker.Faker;
+import lombok.Value;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Random;
 
 public class DataGenerator {
-
     private DataGenerator() {
+    }
+
+    public static String generateDate(int days) {
+        // TODO: добавить логику для объявления переменной date и задания её значения, для генерации строки с датой
+        // Вы можете использовать класс LocalDate и его методы для получения и форматирования даты
+        String date = LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        return date;
+    }
+
+    public static String generateCity(String locale) {
+        // TODO: добавить логику для объявления переменной city и задания её значения, генерацию можно выполнить
+        // с помощью Faker, либо используя массив валидных городов и класс Random
+        Faker faker = new Faker(new Locale(locale));
+        String city = faker.address().cityName();
+        return city;
+    }
+
+    public static String generateName(String locale) {
+        // TODO: добавить логику для объявления переменной name и задания её значения, для генерации можно
+        // использовать Faker
+        Faker faker = new Faker(new Locale(locale));
+        String name = faker.name().fullName();
+        return name;
+    }
+
+    public static String generatePhone(String locale) {
+        // TODO: добавить логику для объявления переменной phone и задания её значения, для генерации можно
+        // использовать Faker
+        Faker faker = new Faker(new Locale(locale));
+        String phone = faker.phoneNumber().phoneNumber();
+        return phone;
     }
 
     public static class Registration {
         private Registration() {
         }
 
-        public static String getCityForCard() {
-            String[] cities = {"Москва", "Казань", "Волгоград", "Санкт-Петербург", "Ростов-на-Дону", "Нижний Новгород"};
-            Random random = new Random();
-            int index = random.nextInt(cities.length);
-            return cities[index];
+        public static UserInfo generateUser(String locale) {
+            // TODO: добавить логику для создания пользователя user с использованием методов generateCity(locale),
+            // generateName(locale), generatePhone(locale)
+            return new UserInfo(generateCity(locale), generateName(locale), generatePhone(locale));
         }
-
-        public static InputData generate() {
-            Faker faker = new Faker(new Locale("ru"));
-            LocalDate futureDate1 = LocalDate.now().plusDays(4);
-            LocalDate futureDate2 = LocalDate.now().plusDays(14);
-
-            return new InputData(
-
-                    futureDate1,
-                    faker.name().firstName(),
-                    faker.name().lastName(),
-                    faker.phoneNumber().cellPhone(),
-                    futureDate2);
-        }
-
     }
 
+    @Value
+    public static class UserInfo {
+        String city;
+        String name;
+        String phone;
+    }
 }
